@@ -1,0 +1,28 @@
+location / {
+  root   html;
+  index  index.html index.htm;
+}
+
+# deny acccess to .hidden file
+location ~ /\. {
+  deny all;
+  return 404;
+  log_not_found off;
+}
+
+location = /favicon.ico {
+  log_not_found off;
+}
+
+# monitoring resource
+# http://localhost/status
+location /nginx_status {
+  stub_status;
+  allow 127.0.0.1;
+  deny all;
+}
+
+location = /robots.txt {
+  allow all;
+  log_not_found off;
+}
