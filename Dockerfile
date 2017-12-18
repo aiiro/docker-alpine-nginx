@@ -3,10 +3,8 @@ FROM alpine:3.4
 RUN \
     # add www user
     adduser -D www \
-
     && apk --update add --no-cache pcre-dev openssl-dev openssl zlib-dev \
     && apk add --no-cache --virtual build-dependencies build-base curl \
-
     # install Nginx
     && curl -SLO http://nginx.org/download/nginx-1.11.3.tar.gz \
     && tar -xzvf nginx-1.11.3.tar.gz \
@@ -22,19 +20,14 @@ RUN \
     --pid-path=/var/run/nginx.pid \
     --http-log-path=/data/logs/nginx/access.log \
     --error-log-path=/data/logs/nginx/error.log \
-
     && make \
     && make install \
-
     && ln -sf /dev/stdout /data/logs/nginx/access.log \
     && ln -sf /dev/stderr /data/logs/nginx/error.log \
-
     && cd / \
     && apk del --purge build-dependencies \
     && rm -rf nginx-1.11.3.tar.gz nginx-1.11.3 \
-
     && rm -rf /etc/nginx/conf/nginx.conf /etc/nginx/conf/fastcgi_params \
-
     && mkdir -p /etc/nginx/ssl \
     && openssl genrsa -out /etc/nginx/ssl/dummy.key 2048 \
     && openssl req -new -key /etc/nginx/ssl/dummy.key -out /etc/nginx/ssl/dummy.csr -subj "/C=JP" \
