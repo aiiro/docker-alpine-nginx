@@ -29,7 +29,13 @@ rm -f /etc/nginx/conf/access/location.conf
 if [ "${WITH_PHP_FPM}" = TRUE ]; then
   # php-fpm must be started before Nginx starts.
   cp /etc/nginx/conf/access/location.conf.php.fpm /etc/nginx/conf/access/location.conf
-  echo "${PHP_FPM_UPSTREAM}" >> /etc/nginx/conf/nginx/upstream.conf
+
+  if grep -qF "php-upstream" /etc/nginx/conf/nginx/upstream.conf; then
+    echo "upstream is already set."
+  else
+    echo "${PHP_FPM_UPSTREAM}" >> /etc/nginx/conf/nginx/upstream.conf
+  fi
+
 else
   cp /etc/nginx/conf/access/location.conf.default /etc/nginx/conf/access/location.conf
 fi
